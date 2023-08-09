@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+    </style>
+  </head>
+  <body>
+    <!--El ejemplo de CDs pero con el addeventListener-->
+    <h2>Coleccion de CDs:</h2>
+    <div id='miDiv'></div>
+    <button type='button' id="boton">Descubre mi coleccion</button>
+    <script>
+      function cargaDocXML() {
+        let xmlhttp, xmlDoc, txt, artistas, i;
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            xmlDoc = xmlhttp.responseXML;
+            alert(xmlhttp.responseXML);
+            txt = '';
+            artistas = xmlDoc.getElementsByTagName('ARTIST');
+            for (i = 0; i < artistas.length; i++) {
+              txt = txt + artistas[i].textContent + '<br/>';
+            }
+            document.getElementById('miDiv').innerHTML = txt;
+          }
+        }
+        xmlhttp.open('GET', 'cd_catalog.xml', true);
+        xmlhttp.send();
+      }
+      let miEvento = document.getElementById('boton');
+      miEvento.addEventListener('click', cargaDocXML);
+    </script>
+  </body>
+</html>

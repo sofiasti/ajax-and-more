@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- Crea un formulario HTML en el que haya un desplegable, 
+            cuyo contenido se rellene a través de código js, donde podamos elegir 
+            entre las razas de perro disponibles en la URL https://dog.ceo/api/breeds/list/all, 
+            cuando se produzca el evento onchange en ese desplegable realiza una solicitud ajax 
+            a esta web con el valor de la raza seleccionado en el desplegable, si el nombre de la 
+            raza tiene un espacio el espacio ha de sustituirse por un guión medio para que la 
+            url funcione
+            https://dog.ceo/api/breed/***raza***/images
+            e inserta en la misma web la imagen que devuelve el JSON obtenido como 
+            respuesta a esta solicitud:
+            -->
+    </head>
+<body>
+  <h1>Estas son las razas de perro</h1>
+  <select id="miDesplegable"></select>
+  <div id='imagencita'></div>
+  <script>
+    //Busco los elementos por su ID en el HTML
+    let seleccionaRaza = document.getElementById('miDesplegable');
+    let insertaImagen = document.getElementById('imagencita');
+    let data; 
+    //Inicio la parte de la API con el método fetch
+    fetch('https://dog.ceo/api/breeds/list/all')
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error en la solicitud a la API');
+        }
+      })
+      //Busco en el JSON los elementos. En este caso como necesito mostrar un array con elementos uso el Object keys
+      //Que no estoy segura sí lo vimo en clase. SIn embargo el chatGPT me lo explicó ayer y me pareció mas sencillo que el
+      //método que hicimos en clase
+      .then(function (responseData) { 
+        data = responseData; 
+        for(let i=0; i<responseData.message.length; i++)
+        {
+          let opcion = document.createElement('option');
+          opcion.text = responseData.message[i].value;
+          opcion.value = i;
+          seleccionaRaza.appendChild(opcion);
+        };
+    });
+      //Hago el onChange para que cada vez que selecciono una raza esta cambie la imágen a la correspondiente
+      seleccionaRaza.addEventListener('change', function () {
+        let opcionSeleccionada = seleccionaRaza.options[seleccionaRaza.selectedIndex]; 
+        let razaSeleccionada = opcionSeleccionada.value;
+        //Hago otro fetch para ingresar en el link de las imagees
+        fetch(`https://dog.ceo/api/breed/${razaSeleccionada}/images/random`)
+            .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Error en la solicitud a la API');
+            }
+            })
+            //Busco solo la url de la imagen dentro de ese link y la inserto en mi div
+            .then(function (responseData) {
+            insertaImagen.innerHTML = `<img src="${responseData.message}">`;
+            });
+        });
+  </script>
+</body>
+</html>
+</html>

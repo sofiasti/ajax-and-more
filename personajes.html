@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+    <head>
+        <!--En la URL https://randomuser.me/api/?format=xml puedes obtener información de un usuario 
+            aleatorio, crea un formulario donde se pueda indicar la cantidad de personajes 
+            aleatorios que se desee crear y que muestre las fichas de los personajes aleatorios 
+            obtenidos, mostrando el nombre con los apellidos, la foto de perfil y su número de 
+            teléfono-->
+        <style>
+        </style>
+    </head>
+    <body>
+        <h1>Generador de personajes aleatorios</h1>
+        <label>Cuantos personajes aleatorios quieres generar?</label>
+        <input type="number" id="numero"><button type="submit" id="submit">Generar</button>
+        <div id="perfiles" class="perfil">
+        </div>
+        <script>
+            //Buscamos los Ids
+            let repeticiones=document.getElementById('numero');
+            let perfiles = document.getElementById('perfiles');
+            let enviaInformacion=document.getElementById('submit')
+            
+            //Hago la petición al XML 
+            function getXML(){
+                let xmlhttp, xmlDoc
+                xmlhttp = new XMLHttpRequest();
+                //Hago la funcion con el statechange
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+                        xmlDoc = xmlhttp.responseXML;
+                        //Llamo a las etiquetas pero tengo que aclarar que a sus hijes ;)
+                        primerNombre=xmlDoc.getElementsByTagName('first')[0].childNodes[0].nodeValue;
+                        ultimoNombre=xmlDoc.getElementsByTagName('last')[0].childNodes[0].nodeValue;
+                        telefonoContacto=xmlDoc.getElementsByTagName('phone')[0].childNodes[0].nodeValue;
+                        fotoDePerfil=xmlDoc.getElementsByTagName('thumbnail')[0].childNodes[0].nodeValue;
+                        //Creo divs para almacenar la información dentro de perfiles
+                        let div = document.createElement('div');
+                        div.className = 'perfil';
+                        div.innerHTML = `<div>${primerNombre} ${ultimoNombre}</div><img src="${fotoDePerfil}"><div>${telefonoContacto}</div>`;
+                        perfiles.appendChild(div);
+                    }
+                }
+                xmlhttp.open('GET', 'https://randomuser.me/api/?format=xml', true);
+                xmlhttp.send();
+            }
+            //Evento para el botón donde también tengo que crear un bucle para que se repita la cantidad de veces que yo le pida
+            enviaInformacion.addEventListener('click', function() {
+                let repeticiones = document.getElementById('numero').value;
+                for (let i = 0; i < repeticiones; i++) {
+                    getXML();
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Details</title>
+</head>
+<body>
+    <script>
+        let empleados; // Declare empleados variable in the outer scope
+
+        function cargaXML() {
+            let xmlDoc, txt;
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    xmlDoc = xmlhttp.responseXML;
+                    empleados = xmlDoc.getElementsByTagName('employee');
+                    for (let i = 0; i < empleados.length; i++) {
+                        let id = empleados[i].getElementsByTagName('id')[0].childNodes[0].nodeValue;
+                        let name = empleados[i].getElementsByTagName('name')[0].childNodes[0].nodeValue;
+                        let position = empleados[i].getElementsByTagName('position')[0].childNodes[0].nodeValue;
+                        let option = document.createElement('option');
+                        option.value = i; // Set the value to the index
+                        option.text = name; // Set the displayed text to the employee name
+                        select.appendChild(option);
+                    }
+                }
+            };
+            xmlhttp.open('GET', 'empleados.xml', true);
+            xmlhttp.send();
+        }
+
+        function mostrarEmpleado() {
+            let select = document.getElementById('select');
+            let selectedIndex = select.selectedIndex;
+            let empleado = empleados[selectedIndex];
+            let id = empleado.getElementsByTagName('id')[0].childNodes[0].nodeValue;
+            let name = empleado.getElementsByTagName('name')[0].childNodes[0].nodeValue;
+            let position = empleado.getElementsByTagName('position')[0].childNodes[0].nodeValue;
+
+            let empleadoInfo = document.getElementById('empleadoInfo');
+            empleadoInfo.textContent = `ID: ${id}, Name: ${name}, Position: ${position}`;
+        }
+    </script>
+
+    <select id="select" onchange="mostrarEmpleado()"></select>
+    <div id="empleadoInfo"></div>
+
+    <script>
+        cargaXML(); // Call the function to load XML on page load
+    </script>
+</body>
+</html>
+

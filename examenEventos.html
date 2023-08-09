@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<body>
+<form id='miFormulario'>
+<label for='formato'>Selecciona un elemento html:</label>
+<select id='elemento'>
+</select><br><br>
+<label for='cantidadElementos'>Cantidad de elementos a crear</label>
+<input type='number' id='cantidad' name='cantidad' required><br><br>
+<label for='textoaescribir'>¿Que quieres escribir?</label>
+<input type='text' id='texto' name='texto' required><br><br>
+<input type='submit' id='submit'value='Submit'>
+</form>
+<div id='textito'></div>
+<script>
+let formulario=document.getElementById('miFormulario');
+let vector=['h1', 'p', 'div', 'h2'];
+let defineFormato=document.getElementById('elemento');
+for(let i=0;i<vector.length;i++)
+{
+let opcion=document.createElement("option");
+opcion.text=vector[i];
+elemento.appendChild(opcion);
+}
+let defineCantidad=document.getElementById('cantidad');
+let defineTexto=document.getElementById('texto');
+let enviaInfo=document.getElementById('submit');
+enviaInfo.addEventListener('click', enviarFormulario);
+function enviarFormulario(event){
+event.preventDefault();
+let elemento= defineFormato.value;
+let cantidad= defineCantidad.value;
+let texto= defineTexto.value;
+for(let j=0; j<=cantidad; j++){
+let resultado=document.createElement(elemento);
+resultado.textContent=texto;
+textito.appendChild(resultado);			
+}
+}
+</script>
+</body>
+</head>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>GraphQL</title>
+</head>
+<body>
+  <select id="miDesplegable"></select>
+  <select id="infoSelector">
+    <option value="episode">Episodio</option>
+    <option value="air_date">Fecha de lanzamiento</option>
+  </select>
+  <div id="infoCapitulo"></div>
+
+  <script>
+    // Obtener referencia al elemento select y al div en el HTML
+    let selectElement = document.getElementById('miDesplegable');
+    let infoSelector = document.getElementById('infoSelector');
+    let infoCapituloElement = document.getElementById('infoCapitulo');
+
+    // Hacer la solicitud a la API utilizando fetch
+    fetch('https://rickandmortyapi.com/api/episode')
+      .then(function(response) {
+        // Verificar si la solicitud fue exitosa
+        if (response.ok) {
+          // Parsear la respuesta a formato JSON
+          return response.json();
+        } else {
+          throw new Error('Error en la solicitud a la API');
+        }
+      })
+      .then(function(data) {
+        // Recorrer los datos obtenidos de la API
+        for (let i = 0; i < data.results.length; i++) {
+          // Crear una opción para cada elemento
+          let option = document.createElement('option');
+          option.text = data.results[i].name;
+          option.value = i;
+
+          // Agregar la opción al select
+          selectElement.appendChild(option);
+        }
+
+        // Agregar evento change al select
+        selectElement.addEventListener('change', function() {
+          let selectedOption = selectElement.options[selectElement.selectedIndex];
+          let selectedEpisode = data.results[selectedOption.value];
+
+          // Obtener el valor seleccionado del infoSelector
+          let selectedInfo = infoSelector.value;
+
+          // Actualizar la información del capítulo en el div
+          infoCapituloElement.innerHTML = `
+            <h2>${selectedEpisode.name}</h2>
+            <p id="infoTexto">${selectedInfo.charAt(0).toUpperCase() + selectedInfo.slice(1)}: ${selectedEpisode[selectedInfo]}</p>
+            <img src="${getRandomImageURL()}" alt="Imagen aleatoria">
+          `;
+        });
+
+        // Agregar evento change al infoSelector
+        infoSelector.addEventListener('change', function() {
+          let selectedOption = selectElement.options[selectElement.selectedIndex];
+          let selectedEpisode = data.results[selectedOption.value];
+
+          // Obtener el valor seleccionado del infoSelector
+          let selectedInfo = infoSelector.value;
+
+          // Actualizar la información del capítulo en el div
+          let infoTextoElement = document.getElementById('infoTexto');
+          infoTextoElement.textContent = `${selectedInfo.charAt(0).toUpperCase() + selectedInfo.slice(1)}: ${selectedEpisode[selectedInfo]}`;
+        });
+      })
+      .catch(function(error) {
+        // Manejar cualquier error ocurrido durante el proceso
+        console.log('Error: ' + error.message);
+      });
+
+    // Función para obtener una URL aleatoria de imágenes
+    function getRandomImageURL() {
+      let imageUrls = [
+        'https://img.asmedia.epimg.net/resizer/ho-i3XGo4afr6FEYeIsbHl1cbY8=/1288x725/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/MJLAZUYQGBH4JOJPG6N2XXDAG4.jpg',
+        'https://img.asmedia.epimg.net/resizer/Sfbt2ldT0BmlQOm8_ISWDpsZ2MM=/1472x0/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/TEACDAZAIREQLENYGDQZXGSY3M.jpg',
+        'https://img.asmedia.epimg.net/resizer/Qwh2ByMbq1K_PR3K9E6bAYGEUR4=/1472x0/cloudfront-eu-central-1.images.arcpublishing.com/diarioas/25CHQKRMH5HKZJ5MJZITLOT7SY.jpg',
+        // Agrega más URL de imágenes aquí...
+      ];
+      let randomIndex = Math.floor(Math.random() * imageUrls.length);
+      return imageUrls[randomIndex];
+    }
+  </script>
+</body>
+</html>
+

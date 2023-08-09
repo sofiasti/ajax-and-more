@@ -1,0 +1,17 @@
+<employees>
+  <employee>
+    <id>1</id>
+    <name>John Doe</name>
+    <position>Manager</position>
+  </employee>
+  <employee>
+    <id>2</id>
+    <name>Jane Smith</name>
+    <position>Developer</position>
+  </employee>
+  <employee>
+    <id>3</id>
+    <name>Michael Johnson</name>
+    <position>Designer</position>
+  </employee>
+</employees>

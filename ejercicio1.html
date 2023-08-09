@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--XML and Ajax:
+    a. Write JavaScript code to make an Ajax 
+    request to retrieve XML data from a server and display the contents 
+    on a webpage.-->
+</head>
+<body>
+    <script>
+        function cargaXML() {
+            let xmlDoc, empleados, txt;
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    xmlDoc = xmlhttp.responseXML;
+                    empleados = xmlDoc.getElementsByTagName('employee');
+                    txt = '';
+                    for (let i = 0; i < empleados.length; i++) {
+                        let id = empleados[i].getElementsByTagName('id')[0].childNodes[0].nodeValue;
+                        let name = empleados[i].getElementsByTagName('name')[0].childNodes[0].nodeValue;
+                        let position = empleados[i].getElementsByTagName('position')[0].childNodes[0].nodeValue;
+                        txt += `ID: ${id}, Name: ${name}, Position: ${position}<br>`;
+                    }
+                    document.getElementById('empleado').innerHTML = txt;
+                }
+            };
+            xmlhttp.open('GET', 'empleados.xml', true);
+            xmlhttp.send();
+        }
+        cargaXML(); // Call the function to load XML on page load
+    </script>
+    <div id="empleado"></div>
+</body>
+</html>
+
+

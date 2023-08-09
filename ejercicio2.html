@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Details</title>
+</head>
+<body>
+    <script>
+        function cargaXML() {
+            let xmlDoc, empleados, txt;
+            let xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    xmlDoc = xmlhttp.responseXML;
+                    empleados = xmlDoc.getElementsByTagName('employee');
+                    for (let i = 0; i < empleados.length; i++) {
+                        let id = empleados[i].getElementsByTagName('id')[0].childNodes[0].nodeValue;
+                        let name = empleados[i].getElementsByTagName('name')[0].childNodes[0].nodeValue;
+                        let position = empleados[i].getElementsByTagName('position')[0].childNodes[0].nodeValue;
+                        let option = document.createElement('option');
+                        option.value = i; // Set the value to the index
+                        option.text = name; // Set the displayed text to the employee name
+                        select.appendChild(option);
+                    }
+                }
+            };
+            xmlhttp.open('GET', 'empleados.xml', true);
+            xmlhttp.send();
+        }
+
+        function mostrarEmpleado() {
+            let select = document.getElementById('select');
+            let selectedIndex = select.selectedIndex;
+            let empleado = empleados[selectedIndex];
+            let id = empleado.getElementsByTagName('id')[0].childNodes[0].nodeValue;
+            let name = empleado.getElementsByTagName('name')[0].childNodes[0].nodeValue;
+            let position = empleado.getElementsByTagName('position')[0].childNodes[0].nodeValue;
+
+            let tabla = document.getElementById('tabla');
+            tabla.innerHTML = ''; // Clear previous content
+
+            let table = document.createElement('table');
+            let tbody = document.createElement('tbody');
+            let trId = document.createElement('tr');
+            let trName = document.createElement('tr');
+            let trPosition = document.createElement('tr');
+
+            let tdIdLabel = document.createElement('td');
+            let tdIdValue = document.createElement('td');
+            let tdNameLabel = document.createElement('td');
+            let tdNameValue = document.createElement('td');
+            let tdPositionLabel = document.createElement('td');
+            let tdPositionValue = document.createElement('td');
+
+            tdIdLabel.textContent = 'ID:';
+            tdIdValue.textContent = id;
+            tdNameLabel.textContent = 'Name:';
+            tdNameValue.textContent = name;
+            tdPositionLabel.textContent = 'Position:';
+            tdPositionValue.textContent = position;
+
+            trId.appendChild(tdIdLabel);
+            trId.appendChild(tdIdValue);
+            trName.appendChild(tdNameLabel);
+            trName.appendChild(tdNameValue);
+            trPosition.appendChild(tdPositionLabel);
+            trPosition.appendChild(tdPositionValue);
+
+            tbody.appendChild(trId);
+            tbody.appendChild(trName);
+            tbody.appendChild(trPosition);
+
+            table.appendChild(tbody);
+            tabla.appendChild(table);
+        }
+    </script>
+
+    <select id="select" onchange="mostrarEmpleado()"></select>
+    <div id="tabla"></div>
+
+    <script>
+        cargaXML(); // Call the function to load XML on page load
+    </script>
+</body>
+</html>
